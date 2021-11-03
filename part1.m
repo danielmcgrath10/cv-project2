@@ -22,7 +22,7 @@ corners_2 = detectHarrisFeatures(images(:,:,2));
 
 figure;
 imshow(images(:,:,2)); hold on;
-plot(corners_2.selectStrongest(50));
+plot(corners_2);
 hold off; 
 
 
