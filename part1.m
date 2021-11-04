@@ -22,9 +22,11 @@ corners_2_nonmax = nonmax_suppression(corners_2, nonmax_distance);
 corners1 = round(corners_1.Location);
 corners2 = round(corners_2.Location);
 
-ncc = zeros(length(corners1), length(corners2));
 im1 = images(:,:,1);
 im2 = images(:,:,2);
+im1corners = []; 
+im2corners = [];
+counter = 1;
 for i = 1:length(corners1)
     corner1 = corners1(i,:);
     for j = 1:length(corners2)
@@ -39,7 +41,9 @@ for i = 1:length(corners1)
         mesh2 = im2(corner2(2)-ncc_mesh:corner2(2)+ncc_mesh,corner2(1)-ncc_mesh:corner2(1)+ncc_mesh);
         nccval = max(max(normxcorr2(mesh1,mesh2)));
         if(nccval > ncc_thresh)
-            ncc(i,j) = nccval;
+            im1corner(counter, :) = a;
+            im2corner(counter, :) = b;
+            counter = counter + 1;
         end
     end
 end
