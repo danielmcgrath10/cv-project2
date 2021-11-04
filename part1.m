@@ -32,11 +32,11 @@ for i = 1:length(corners1)
 %         if((a(1)-ncc_mesh < 1) || (a(2)-ncc_mesh < 1) || (a(1)+ncc_mesh > length(im1)) || (a(2)+ncc_mesh > length(im1)))
 %             break
 %         end
-        mesh1 = im1(a(2)-ncc_mesh:a(2)+ncc_mesh,a(1)-ncc_mesh:a(1)+ncc_mesh);
+        mesh1 = im1(corner1(2)-ncc_mesh:corner1(2)+ncc_mesh,corner1(1)-ncc_mesh:corner1(1)+ncc_mesh);
 %         if((b(1)-ncc_mesh < 1) || (b(2)-ncc_mesh < 1) || (b(1)+ncc_mesh > length(im2)) || (b(2)+ncc_mesh > length(im2)))
 %             break
 %         end
-        mesh2 = im2(b(2)-ncc_mesh:b(2)+ncc_mesh,b(1)-ncc_mesh:b(1)+ncc_mesh);
+        mesh2 = im2(corner2(2)-ncc_mesh:corner2(2)+ncc_mesh,corner2(1)-ncc_mesh:corner2(1)+ncc_mesh);
         nccval = max(max(normxcorr2(mesh1,mesh2)));
         if(nccval > ncc_thresh)
             ncc(i,j) = nccval;
