@@ -26,9 +26,22 @@ corners_2_th = corners_2.selectStrongest(round(corners_2.length * 0.4));
 
 corners_2_nonmax = nonmax_suppression(corners_2_th, 1.0);
 
-figure;
-imshow(images(:,:,2)); hold on;
-plot(corners_2_nonmax);
-hold off; 
+% figure;
+% imshow(images(:,:,2)); hold on;
+% plot(corners_2_nonmax);
+% hold off; 
+
+corners1 = round(corners_1.Location);
+corners2 = round(corners_2.Location);
+
+nnc = zeros(length(corners1));
+for i = 1:length(corners1)
+    a = corners1(i);
+    for j = 1:length(corners2)
+        b = corners2(j);
+        
+    end
+end
+
 
 
