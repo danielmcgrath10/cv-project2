@@ -1,4 +1,5 @@
-
+clearvars;
+close all;
 [images, n] = import_images(340, 512, 0, 0);
 
 % MinQuality establishes thresholding of [ratio] multiplied by the maximum
@@ -17,7 +18,7 @@ corners_2_nonmax = nonmax_suppression(corners_2, nonmax_distance);
 % figure;
 % imshow(images(:,:,2)); hold on;
 % plot(corners_2_nonmax);
-% hold off; 
+% hold off;
 
 corners1 = round(corners_1.Location);
 corners2 = round(corners_2.Location);
@@ -59,7 +60,7 @@ for i = 1:size(ncc,1)
                 j = size(ncc, 2);
             else
                 j = j + 1;
-            end 
+            end
         end
     end
 end
@@ -72,10 +73,18 @@ temp = im2corners(:,1);
 im2corners(:,1) = im2corners(:,2);
 im2corners(:,2) = temp;
 
+for row = ncc
+
+end
+
 ransac_tries = 10;
 
 % For some arbitrary number of tries
+for i = 1:ransac_tries
     % Select 4 corner pairs between images 1 and 2
+
+
+end
     % Compute homography H using algebraic distance on those corner pairs
     % Apply H to corner 1 and asses "inliers"
         % For each point correspondence detected between images 1 and 2
@@ -84,12 +93,10 @@ ransac_tries = 10;
     % If number of inliers > max found so far, keep that set of inliers
 % (Kept largest set of inliers)
 % Recompute H using algebraic distance with all inliers (of largest set)
-        
+
 
 figure;
 colormap gray;
 image(images(:,:,2), 'CDataMapping', 'direct'); hold on;
 plot(corners_2_nonmax);
-hold off; 
-
-
+hold off;
