@@ -44,6 +44,26 @@ for i = 1:length(corners1)
     end
 end
 
+im1corners = [];
+im2corners = [];
+counter = 1;
+for i = 1:size(ncc,1)
+    maxval = max(ncc(i,:));
+    j = 1;
+    if(maxval > 0)
+        while j < size(ncc,2)
+            if(ncc(i,j) == maxval)
+                im1corners(counter, :) = corners1(i,:);
+                im2corners(counter, :) = corners2(j,:);
+                counter = counter + 1;
+                j = size(ncc, 2);
+            else
+                j = j + 1;
+            end 
+        end
+    end
+end
+
 ransac_tries = 10;
 
 % For some arbitrary number of tries
