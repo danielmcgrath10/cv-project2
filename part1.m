@@ -20,6 +20,8 @@ corners_2 = detectHarrisFeatures(images(:,:,2));
 % plot(corners_1.selectStrongest(50));
 % hold off;
 
+
+
 figure;
 imshow(images(:,:,2)); hold on;
 plot(corners_2);
