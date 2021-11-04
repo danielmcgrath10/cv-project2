@@ -20,9 +20,15 @@ corners_2 = detectHarrisFeatures(images(:,:,2));
 % plot(corners_1.selectStrongest(50));
 % hold off;
 
+% This has the effect of selecting the [ratio]th strongest corner and
+% making that strength value the threshold.
+corners_2_th = corners_2.selectStrongest(round(corners_2.length * 0.4));
+
+corners_2_nonmax = nonmax_suppression(corners_2_th, 1.0);
+
 figure;
 imshow(images(:,:,2)); hold on;
-plot(corners_2);
+plot(corners_2_nonmax);
 hold off; 
 
 
