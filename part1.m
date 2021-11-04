@@ -44,6 +44,20 @@ for i = 1:length(corners1)
     end
 end
 
+ransac_tries = 10;
+
+% For some arbitrary number of tries
+    % Select 4 corner pairs between images 1 and 2
+    % Compute homography H using algebraic distance on those corner pairs
+    % Apply H to corner 1 and asses "inliers"
+        % For each point correspondence detected between images 1 and 2
+            % Determine whether transformed 1 matches 2 (within error)
+    % Table the number of inliers for each try
+    % If number of inliers > max found so far, keep that set of inliers
+% (Kept largest set of inliers)
+% Recompute H using algebraic distance with all inliers (of largest set)
+        
+
 figure;
 colormap gray;
 image(images(:,:,2), 'CDataMapping', 'direct'); hold on;
