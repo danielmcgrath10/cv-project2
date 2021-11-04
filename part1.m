@@ -6,7 +6,7 @@
 ratio = 0.1;
 corners_1 = detectHarrisFeatures(images(:,:,1), 'MinQuality', ratio);
 corners_2 = detectHarrisFeatures(images(:,:,2), 'MinQuality', ratio);
-ncc_thresh = 0.5;
+ncc_thresh = 0.7;
 ncc_mesh = 1;
 
 ratio = 0.4;
@@ -26,20 +26,20 @@ ncc = zeros(length(corners1), length(corners2));
 im1 = images(:,:,1);
 im2 = images(:,:,2);
 for i = 1:length(corners1)
-    a = corners1(i,:);
+    corner1 = corners1(i,:);
     for j = 1:length(corners2)
-        b = corners2(j,:);
+        corner2 = corners2(j,:);
 %         if((a(1)-ncc_mesh < 1) || (a(2)-ncc_mesh < 1) || (a(1)+ncc_mesh > length(im1)) || (a(2)+ncc_mesh > length(im1)))
 %             break
 %         end
-        n1 = im1(a(2)-ncc_mesh:a(2)+ncc_mesh,a(1)-ncc_mesh:a(1)+ncc_mesh);
+        mesh1 = im1(a(2)-ncc_mesh:a(2)+ncc_mesh,a(1)-ncc_mesh:a(1)+ncc_mesh);
 %         if((b(1)-ncc_mesh < 1) || (b(2)-ncc_mesh < 1) || (b(1)+ncc_mesh > length(im2)) || (b(2)+ncc_mesh > length(im2)))
 %             break
 %         end
-        n2 = im2(b(2)-ncc_mesh:b(2)+ncc_mesh,b(1)-ncc_mesh:b(1)+ncc_mesh);
-        norm = max(max(normxcorr2(n1,n2)));
-        if(norm > ncc_thresh)
-            ncc(i,j) = norm;
+        mesh2 = im2(b(2)-ncc_mesh:b(2)+ncc_mesh,b(1)-ncc_mesh:b(1)+ncc_mesh);
+        nccval = max(max(normxcorr2(mesh1,mesh2)));
+        if(nccval > ncc_thresh)
+            ncc(i,j) = nccval;
         end
     end
 end
