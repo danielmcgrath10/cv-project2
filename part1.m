@@ -64,6 +64,14 @@ for i = 1:size(ncc,1)
     end
 end
 
+temp = im1corners(:,1);
+im1corners(:,1) = im1corners(:,2);
+im1corners(:,2) = temp;
+
+temp = im2corners(:,1);
+im2corners(:,1) = im2corners(:,2);
+im2corners(:,2) = temp;
+
 ransac_tries = 10;
 
 % For some arbitrary number of tries
