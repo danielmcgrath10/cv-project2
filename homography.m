@@ -21,5 +21,24 @@ end
 
     % reshape
 H = [h(1:3)' ; h(4:6)' ; h(7:9)'];
+
+% A = zeros(2 * N, 8);
+% b = zeros(2 * N, 1);
+% for i = 1 : N
+%     c = correspondences(i, :);
+%     x = c(1);
+%     y = c(2);
+%     xp = c(3);
+%     yp = c(4);
+%     
+%     A((i * 2) - 1, :) = [x,   y,  1,  0,  0, 0, -x*xp, -y*xp];
+%     A((i * 2), :)     = [ 0,  0,  0,  x,  y, 1, -x*yp, -y*yp];
+%     
+%     b((i * 2) - 1) = xp;
+%     b((i * 2))     = yp;
+% end
+% 
+% H = A \ b;
+
 end
 

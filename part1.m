@@ -1,18 +1,17 @@
 clearvars;
 close all;
-[images, n] = import_images(340, 512, 0, 0);
+[rgb_images, images] = import_images(340, 512, 0, 0);
 
 % MinQuality establishes thresholding of [ratio] multiplied by the maximum
 % corner quality value (relative thresholding at [ratio] * 100 %)
-ratio = 0.1;
-corners_1 = detectHarrisFeatures(images(:,:,1), 'MinQuality', ratio);
-corners_2 = detectHarrisFeatures(images(:,:,2), 'MinQuality', ratio);
-ncc_thresh = 0.7;
-ncc_mesh = 1;
-
-ratio = 0.4;
+harris_ratio = 0.1;
+corners_1 = detectHarrisFeatures(images(:,:,1), 'MinQuality', harris_ratio);
+corners_2 = detectHarrisFeatures(images(:,:,2), 'MinQuality', harris_ratio);
+ncc_thresh = 0.8;
+ncc_mesh = 3;
 
 nonmax_distance = 3.0;
+corners_1_nonmax = nonmax_suppression(corners_1, nonmax_distance);
 corners_2_nonmax = nonmax_suppression(corners_2, nonmax_distance);
 
 % figure;
@@ -20,8 +19,8 @@ corners_2_nonmax = nonmax_suppression(corners_2, nonmax_distance);
 % plot(corners_2_nonmax);
 % hold off;
 
-corners1 = round(corners_1.Location);
-corners2 = round(corners_2.Location);
+corners1 = round(corners_1_nonmax.Location);
+corners2 = round(corners_2_nonmax.Location);
 
 ncc = zeros(length(corners1), length(corners2));
 im1 = images(:,:,1);
@@ -65,22 +64,18 @@ for i = 1:size(ncc,1)
     end
 end
 
-temp = im1corners(:,1);
-im1corners(:,1) = im1corners(:,2);
-im1corners(:,2) = temp;
+% temp = im1corners(:,1);
+% im1corners(:,1) = im1corners(:,2);
+% im1corners(:,2) = temp;
+% 
+% temp = im2corners(:,1);
+% im2corners(:,1) = im2corners(:,2);
+% im2corners(:,2) = temp;
+                    
+correspondences = [im1corners(:,2), im1corners(:,1), im2corners(:,2), im2corners(:,1)];
 
-temp = im2corners(:,1);
-im2corners(:,1) = im2corners(:,2);
-im2corners(:,2) = temp;
-
-correspondences = [im1corners, im2corners];
-
-for row = ncc
-    
-end
-
-ransac_tries = 10;
-ransac_distance = 1.0;
+ransac_tries = 1000;
+ransac_distance = 10.0;
 
 ransac_inliers = zeros(ransac_tries, 1);
 ransac_H_set = zeros(3, 3, ransac_tries);
@@ -96,9 +91,9 @@ for i = 1:ransac_tries
     for j = 1:size(correspondences,1)
         c = correspondences(j, :);
         p = [c(1); c(2); 1];
-        p_prime = H * p;
-        
-        if (abs(sum(p_prime(1:2) - c(3:4)')) <= ransac_distance)
+        p_prime = sum((H .* p), 2);
+        compare = c(3:4)';
+        if (abs(sum(p_prime(1:2) - compare)) <= ransac_distance)
            ransac_inliers(i) = ransac_inliers(i) + 1;
         end
     end
@@ -111,8 +106,15 @@ end
 % Recompute H using algebraic distance with all inliers (of largest set)
 
 
+disp(max(ransac_inliers));
+
+figure;
+ax = axes;
+showMatchedFeatures(rgb_images(:,:,:,1),rgb_images(:,:,:,2),im1corners,im2corners,'montage','Parent',ax);
+
 figure;
 colormap gray;
-image(images(:,:,2), 'CDataMapping', 'direct'); hold on;
+imshow(rgb_images(:,:,:,2)); hold on;
 plot(corners_2_nonmax);
 hold off;
+
