@@ -1,4 +1,5 @@
-
+clearvars;
+close all;
 [images, n] = import_images(340, 512, 0, 0);
 
 % MinQuality establishes thresholding of [ratio] multiplied by the maximum
@@ -17,7 +18,7 @@ corners_2_nonmax = nonmax_suppression(corners_2, nonmax_distance);
 % figure;
 % imshow(images(:,:,2)); hold on;
 % plot(corners_2_nonmax);
-% hold off; 
+% hold off;
 
 corners1 = round(corners_1.Location);
 corners2 = round(corners_2.Location);
@@ -44,28 +45,72 @@ for i = 1:length(corners1)
     end
 end
 
-ransac_tries = 10;
+im1corners = [];
+im2corners = [];
+counter = 1;
+for i = 1:size(ncc,1)
+    maxval = max(ncc(i,:));
+    j = 1;
+    if(maxval > 0)
+        while j < size(ncc,2)
+            if(ncc(i,j) == maxval)
+                im1corners(counter, :) = corners1(i,:);
+                im2corners(counter, :) = corners2(j,:);
+                counter = counter + 1;
+                j = size(ncc, 2);
+            else
+                j = j + 1;
+            end
+        end
+    end
+end
 
+temp = im1corners(:,1);
+im1corners(:,1) = im1corners(:,2);
+im1corners(:,2) = temp;
+
+temp = im2corners(:,1);
+im2corners(:,1) = im2corners(:,2);
+im2corners(:,2) = temp;
+
+correspondences = [im1corners, im2corners];
+
+for row = ncc
+    
+end
+
+ransac_tries = 10;
+ransac_distance = 1.0;
+
+ransac_inliners = zeros(ransac_tries);
+ransac_best_h = zeros(3, 3);
 % For some arbitrary number of tries
 for i = 1:ransac_tries
-    % Select 4 corner pairs between images 1 and 2
-    i
-
-end
+    % Select 4 correspondent corner pairs between images 1 and 2
+    samples = randsample(size(correspondences, 1), 4);
+    subset = correspondences(samples, :);
     % Compute homography H using algebraic distance on those corner pairs
-    % Apply H to corner 1 and asses "inliers"
+    H = homography(subset);
+    % Apply H to first image corners and asses "inliers" on second image
+    for j = 1:size(correspondences,1)
+        c = correspondences(j, :);
+        p = [c(1); c(2); 1];
+        p_prime = H * p;
+        
+        if (
+    end
+    
+end
         % For each point correspondence detected between images 1 and 2
             % Determine whether transformed 1 matches 2 (within error)
     % Table the number of inliers for each try
     % If number of inliers > max found so far, keep that set of inliers
 % (Kept largest set of inliers)
 % Recompute H using algebraic distance with all inliers (of largest set)
-        
+
 
 figure;
 colormap gray;
 image(images(:,:,2), 'CDataMapping', 'direct'); hold on;
 plot(corners_2_nonmax);
-hold off; 
-
-
+hold off;

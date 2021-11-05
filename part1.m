@@ -73,20 +73,36 @@ temp = im2corners(:,1);
 im2corners(:,1) = im2corners(:,2);
 im2corners(:,2) = temp;
 
-for row = ncc
+correspondences = [im1corners, im2corners];
 
+for row = ncc
+    
 end
 
 ransac_tries = 10;
+ransac_distance = 1.0;
 
+ransac_inliers = zeros(ransac_tries, 1);
+ransac_H_set = zeros(3, 3, ransac_tries);
 % For some arbitrary number of tries
 for i = 1:ransac_tries
-    % Select 4 corner pairs between images 1 and 2
-
-
-end
+    % Select 4 correspondent corner pairs between images 1 and 2
+    samples = randsample(size(correspondences, 1), 4);
+    subset = correspondences(samples, :);
     % Compute homography H using algebraic distance on those corner pairs
-    % Apply H to corner 1 and asses "inliers"
+    H = homography(subset);
+    ransac_H_set(:,:,i) = H;
+    % Apply H to first image corners and asses "inliers" on second image
+    for j = 1:size(correspondences,1)
+        c = correspondences(j, :);
+        p = [c(1); c(2); 1];
+        p_prime = H * p;
+        
+        if (abs(sum(p_prime(1:2) - c(3:4)')) <= ransac_distance)
+           ransac_inliers(i) = ransac_inliers(i) + 1;
+        end
+    end
+end
         % For each point correspondence detected between images 1 and 2
             % Determine whether transformed 1 matches 2 (within error)
     % Table the number of inliers for each try
