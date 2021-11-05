@@ -15,11 +15,6 @@ nonmax_distance = 3.0;
 corners_1_nonmax = nonmax_suppression(corners_1, nonmax_distance);
 corners_2_nonmax = nonmax_suppression(corners_2, nonmax_distance);
 
-% figure;
-% imshow(images(:,:,2)); hold on;
-% plot(corners_2_nonmax);
-% hold off;
-
 corners1 = round(corners_1_nonmax.Location);
 corners2 = round(corners_2_nonmax.Location);
 
@@ -42,4 +37,5 @@ colormap gray;
 imshow(rgb_images(:,:,:,2)); hold on;
 plot(corners_2_nonmax);
 hold off;
+
 
