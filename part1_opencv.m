@@ -30,8 +30,7 @@ im2corners = round(matchedPoints2.Location);
 
 correspondences = [im1corners, im2corners];
 
-ransac_iterations = 100;
+ransac_iterations = 10;
 ransac_distance = 10.0;
 
 [ransac_inliers, ransac_H_set] = my_ransac(correspondences, ransac_iterations, ransac_distance);
-
