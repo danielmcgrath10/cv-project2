@@ -21,10 +21,10 @@ corners2 = round(corners_2_nonmax.Location);
 [im1corners, im2corners] = ncc_correspondences(images(:,:,1), images(:,:,2), corners1, corners2, ncc_mesh, ncc_thresh);
 correspondences = [im1corners(:,2), im1corners(:,1), im2corners(:,2), im2corners(:,1)];
 
-ransac_iterations = 100;
-ransac_distance = 10.0;
+ransac_iterations = 1000;
+ransac_distance = 5.0;
 
-[ransac_inliers, ransac_H_set] = my_ransac(correspondences, ransac_iterations, ransac_distance);
+[ransac_H, ransac_inliers] = my_ransac(correspondences, ransac_iterations, ransac_distance);
 
 disp(max(ransac_inliers));
 
