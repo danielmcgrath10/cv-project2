@@ -1,5 +1,5 @@
-clearvars;
 close all;
+clearvars;
 
 [rgb_images, images] = import_images(340, 512, 0, 0);
 
@@ -18,7 +18,18 @@ corners_2_nonmax = nonmax_suppression(corners_2, nonmax_distance);
 corners1 = round(corners_1_nonmax.Location);
 corners2 = round(corners_2_nonmax.Location);
 
+figure;
+colormap gray;
+imshow(rgb_images(:,:,:,2)); hold on;
+plot(corners_2_nonmax);
+hold off;
+
 [im1corners, im2corners] = ncc_correspondences(images(:,:,1), images(:,:,2), corners1, corners2, ncc_mesh, ncc_thresh);
+
+figure;
+ax = axes;
+showMatchedFeatures(rgb_images(:,:,:,1),rgb_images(:,:,:,2),im1corners,im2corners,'montage','Parent',ax);
+
 correspondences = [im1corners(:,2), im1corners(:,1), im2corners(:,2), im2corners(:,1)];
 
 ransac_iterations = 1000;
@@ -28,15 +39,14 @@ ransac_distance = 5.0;
 
 disp(max(ransac_inliers));
 
-figure;
-ax = axes;
-showMatchedFeatures(rgb_images(:,:,:,1),rgb_images(:,:,:,2),im1corners,im2corners,'montage','Parent',ax);
+im2 = double(images(:,:,2));
+[xi, yi] = meshgrid(1:512, 1:340);
+h = inv(ransac_H);
+xx = (h(1,1)*xi+h(1,2)*yi+h(1,3))./(h(3,1)*xi+h(3,2)*yi+h(3,3));
+yy = (h(2,1)*xi+h(2,2)*yi+h(2,3))./(h(3,1)*xi+h(3,2)*yi+h(3,3));
+foo = uint8(interp2(im2,xx,yy));
+figure(1); imshow(foo)
 
-figure;
-colormap gray;
-imshow(rgb_images(:,:,:,2)); hold on;
-plot(corners_2_nonmax);
-hold off;
 
 h = inv(ransac_H);
 im1 = images(:,:,1);
