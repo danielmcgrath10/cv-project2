@@ -30,7 +30,15 @@ im2corners = round(matchedPoints2.Location);
 
 correspondences = [im1corners, im2corners];
 
-ransac_iterations = 10;
-ransac_distance = 10.0;
+ransac_iterations = 1000;
+ransac_distance = 5.0;
 
 [ransac_H, ransac_inliers] = my_ransac(correspondences, ransac_iterations, ransac_distance);
+
+im2 = double(images(:,:,2));
+[xi, yi] = meshgrid(1:512, 1:340);
+h = inv(ransac_H);
+xx = (h(1,1)*xi+h(1,2)*yi+h(1,3))./(h(3,1)*xi+h(3,2)*yi+h(3,3));
+yy = (h(2,1)*xi+h(2,2)*yi+h(2,3))./(h(3,1)*xi+h(3,2)*yi+h(3,3));
+foo = uint8(interp2(im2,xx,yy));
+figure(1); imshow(foo)
