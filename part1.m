@@ -59,40 +59,6 @@ figure;
 % montage({im1, foo});
 imshow(foo);
 
-% im1 = images(:,:,1);
-% im2 = images(:,:,2);
-% 
-% im1 = padarray(im1, [0 size(im2, 2)], 0, 'post');
-% im1 = padarray(im1, [size(im2, 1) 0], 0, 'both');
-% 
-% for i = 1:size(im1, 2)
-%    for j = 1:size(im1, 1)
-%       p2 = ransac_H * [i; j-floor(size(im2, 1)); 1];
-%       p2 = p2 ./ p2(3);
-%       
-%       x2 = floor(p2(1));
-%       y2 = floor(p2(2));
-%       
-%       if x2 > 0 && x2 <= size(im2, 2) && y2 > 0 && y2 <= size(im2, 1)
-%         im1(j, i) = im2(y2, x2);
-%       end
-%    end
-% end
-% 
-% [row, col] = find(im1);
-% c = max(col(:));
-% d = max(row(:));
-% 
-% st = imcrop(im1, [1 1 c d]);
-% 
-% [row, col] = find(im1 ~= 0);
-% a = min(col(:));
-% b = min(row(:));
-% meshedimage = imcrop(st, [a b size(st, 1) size(st, 2)]);
-% 
-% figure;
-% imshow(meshedimage);
-
 
  
 

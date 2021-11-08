@@ -41,4 +41,40 @@ h = inv(ransac_H);
 xx = (h(1,1)*xi+h(1,2)*yi+h(1,3))./(h(3,1)*xi+h(3,2)*yi+h(3,3));
 yy = (h(2,1)*xi+h(2,2)*yi+h(2,3))./(h(3,1)*xi+h(3,2)*yi+h(3,3));
 foo = uint8(interp2(im2,xx,yy));
-figure(1); imshow(foo)
+figure; imshow(foo)
+
+
+% Crediting the creator of this method: https://www.mathworks.com/matlabcentral/fileexchange/46148-image-mosaicing
+im1 = images(:,:,2);
+im2 = images(:,:,1);
+
+im1 = padarray(im1, [0 size(im2, 2)], 0, 'post');
+im1 = padarray(im1, [size(im2, 1) 0], 0, 'both');
+
+for i = 1:size(im1, 2)
+   for j = 1:size(im1, 1)
+      p2 = inv(ransac_H) * [i; j-floor(size(im2, 1)); 1];
+      p2 = p2 ./ p2(3);
+      
+      x2 = floor(p2(1));
+      y2 = floor(p2(2));
+      
+      if x2 > 0 && x2 <= size(im2, 2) && y2 > 0 && y2 <= size(im2, 1)
+        im1(j, i) = im2(y2, x2);
+      end
+   end
+end
+
+[row, col] = find(im1);
+c = max(col(:));
+d = max(row(:));
+
+meshedimage = imcrop(im1, [1 1 c d]);
+
+[row, col] = find(im1 ~= 0);
+a = min(col(:));
+b = min(row(:));
+meshedimage = imcrop(meshedimage, [a b size(meshedimage, 1) size(meshedimage, 2)]);
+
+figure;
+imshow(im1);
